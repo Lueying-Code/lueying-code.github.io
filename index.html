@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>不屈的黑土地：东北抗战十四年（1931-1945）</title>
+<script src="https://modao.cc/agent-py/static/source/js/tailwindcss.3.4.3.js"></script>
+<script src="https://modao.cc/agent-py/static/source/js/iconify-icon.min.1.0.7.js"></script>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap');
+
+        :root {
+            --sepia-bg: #f4ece1;
+            --sepia-dark: #3e2723;
+            --accent-red: #8b0000;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--sepia-bg);
+            color: var(--sepia-dark);
+            overflow-x: hidden;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise" x="0" y="0"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.05"/%3E%3C/svg%3E');
+        }
+
+        /* 隐藏滚动条但保留功能 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .timeline-line {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--sepia-dark) 5%, var(--sepia-dark) 95%, transparent);
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 5000px;
+            z-index: 10;
+        }
+
+        .event-node {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .event-node:hover {
+            transform: scale(1.1) translateY(-10px);
+        }
+
+        .paper-shadow {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1), inset 0 0 100px rgba(232, 213, 181, 0.3);
+        }
+
+        .modal-paper {
+            background-image: url('/agent-py/static/source/images/placeholder.svg'); /* 模拟宣纸纹理 */
+            background-color: #f9f4e8;
+            border: 2px solid #d4c4a8;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* 水平拖拽提示动画 */
+        .scroll-hint {
+            animation: bounceLeftRight 2s infinite;
+        }
+
+        @keyframes bounceLeftRight {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body class="antialiased select-none">
+<!-- 导航栏 -->
+<nav class="fixed top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center bg-gradient-to-b from-[#f4ece1] to-transparent">
+<div class="flex items-center space-x-3">
+<div class="w-12 h-12 bg-red-900 flex items-center justify-center rounded-sm rotate-45 border-2 border-[#d4c4a8]">
+<span class="text-white font-bold -rotate-45 text-xl">抗</span>
+</div>
+<div>
+<h1 class="text-2xl font-black tracking-widest">东北抗战十四年</h1>
+<p class="text-xs opacity-70 tracking-tighter uppercase">Northern Resistance 1931-1945</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold border-b border-red-900 inline-block">2026年04月24日</p>
+<p class="text-[10px] opacity-60">历史文献调研</p>
+</div>
+</nav>
+<!-- 首页介绍区域 -->
+<section class="h-screen flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
+<div class="absolute inset-0 opacity-20 pointer-events-none">
+<img alt="东北抗联密营 林海雪原" class="w-full h-full object-cover grayscale" src="https://kimi-web-img.moonshot.cn/img/p1.img.cctvpic.com/df26fb17d44a34ce3c8207f8a89b49fe995fb210.png"/>
+</div>
+<div class="z-20 max-w-4xl">
+<h2 class="text-6xl md:text-8xl font-black mb-6 tracking-tighter text-red-950">
+                不屈的黑土地
+            </h2>
+<p class="text-xl md:text-2xl mb-8 leading-relaxed tracking-widest text-[#5d4037]">
+                从大兴安岭的密林到松花江畔的雪原<br/>
+                在白山黑水间，他们用血肉铸就了14年不灭的抗战精神
+            </p>
+<div class="flex items-center justify-center space-x-6">
+<div class="h-[1px] w-20 bg-red-900"></div>
+<iconify-icon class="text-3xl scroll-hint" icon="mingcute:down-fill"></iconify-icon>
+<div class="h-[1px] w-20 bg-red-900"></div>
+</div>
+</div>
+</section>
+<!-- 横向时间轴容器 -->
+<section class="relative h-screen bg-[#ece4d9] overflow-hidden flex items-center">
+<!-- 滚动说明 -->
+<div class="absolute top-10 left-10 z-30 flex items-center space-x-2 text-sm opacity-60">
+<iconify-icon icon="material-symbols:mouse-outline"></iconify-icon>
+<span>使用滚轮或左右滑动探索时间线</span>
+</div>
+<div class="flex items-center overflow-x-auto h-full no-scrollbar relative pt-20 px-[20vw]" id="timelineContainer">
+<!-- 中轴线 -->
+<div class="timeline-line"></div>
+<!-- 事件节点列表 -->
+<div class="flex space-x-80 items-center relative z-20" id="eventWrapper">
+<!-- 1931 -->
+<div class="event-node relative flex flex-col items-center cursor-pointer group" onclick="showDetail(0)">
+<div class="absolute -top-40 w-64 bg-white/40 p-4 border-l-4 border-red-900 paper-shadow">
+<span class="text-xs font-bold text-red-900">1931年9月18日</span>
+<h3 class="text-xl font-black my-1">九一八事变</h3>
+<p class="text-xs line-clamp-2">日军炮击北大营，拉开侵略东北序幕，中国局部抗战开始。</p>
+</div>
+<div class="w-6 h-6 bg-red-950 rounded-full border-4 border-white group-hover:bg-red-600"></div>
+<div class="mt-4 text-4xl font-black text-red-950/20">1931</div>
+</div>
+<!-- 1931 江桥抗战 -->
+<div class="event-node relative flex flex-col items-center cursor-pointer group" onclick="showDetail(1)">
+<div class="absolute top-10 w-64 bg-white/40 p-4 border-r-4 border-red-900 paper-shadow">
+<span class="text-xs font-bold text-red-900">1931年11月</span>
+<h3 class="text-xl font-black my-1">江桥抗战</h3>
+<p class="text-xs line-clamp-2">马占山将军领导黑龙江省防军，打响武装抗日第一枪。</p>
+</div>
+<div class="w-6 h-6 bg-red-950 rounded-full border-4 border-white group-hover:bg-red-600"></div>
+<div class="absolute -bottom-16 text-4xl font-black text-red-950/20">NOV</div>
+</div>
+<!-- 1936 抗联成立 -->
+<div class="event-node relative flex flex-col items-center cursor-pointer group" onclick="showDetail(2)">
+<div class="absolute -top-40 w-64 bg-white/40 p-4 border-l-4 border-red-900 paper-shadow">
+<span class="text-xs font-bold text-red-900">1936年2月</span>
+<h3 class="text-xl font-black my-1">东北抗联正式成立</h3>
+<p class="text-xs line-clamp-2">中国共产党领导下，东北抗日武装完成统一建制，共11个军。</p>
+</div>
+<div class="w-8 h-8 bg-red-900 rounded-full border-4 border-white flex items-center justify-center">
+<iconify-icon class="text-white text-sm" icon="emojione-monotone:star"></iconify-icon>
+</div>
+<div class="mt-4 text-4xl font-black text-red-950/20">1936</div>
+</div>
+<!-- 1938 八女投江 -->
+<div class="event-node relative flex flex-col items-center cursor-pointer group" onclick="showDetail(3)">
+<div class="absolute top-10 w-64 bg-white/40 p-4 border-r-4 border-red-900 paper-shadow">
+<span class="text-xs font-bold text-red-900">1938年秋</span>
+<h3 class="text-xl font-black my-1">八女投江</h3>
+<p class="text-xs line-clamp-2">冷云等8名女战士掩护主力撤退，弹尽粮绝投江殉国。</p>
+</div>
+<div class="w-6 h-6 bg-red-950 rounded-full border-4 border-white group-hover:bg-red-600"></div>
+<div class="absolute -bottom-16 text-4xl font-black text-red-950/20">1938</div>
+</div>
+<!-- 1940 杨靖宇牺牲 -->
+<div class="event-node relative flex flex-col items-center cursor-pointer group" onclick="showDetail(4)">
+<div class="absolute -top-40 w-72 bg-red-900/10 p-4 border-l-4 border-red-950 paper-shadow">
+<span class="text-xs font-bold text-red-900">1940年2月23日</span>
+<h3 class="text-xl font-black my-1">杨靖宇将军牺牲</h3>
+<p class="text-xs line-clamp-2">在弹尽粮绝中孤身战斗5天，胃中仅有草根棉絮，震撼日军。</p>
+</div>
+<div class="w-10 h-10 bg-black rounded-full border-4 border-white flex items-center justify-center">
+<iconify-icon class="text-white text-xl" icon="ri:honor-fill"></iconify-icon>
+</div>
+<div class="mt-4 text-4xl font-black text-red-950/20">1940</div>
+</div>
+<!-- 1945 胜利 -->
+<div class="event-node relative flex flex-col items-center cursor-pointer group" onclick="showDetail(5)">
+<div class="absolute top-10 w-64 bg-green-900/10 p-4 border-r-4 border-green-900 paper-shadow">
+<span class="text-xs font-bold text-green-900">1945年8月15日</span>
+<h3 class="text-xl font-black my-1">抗战胜利 东北光复</h3>
+<p class="text-xs line-clamp-2">日本无条件投降，苏联红军与抗联小分队协同作战，驱逐寇虏。</p>
+</div>
+<div class="w-6 h-6 bg-green-950 rounded-full border-4 border-white group-hover:bg-green-600"></div>
+<div class="absolute -bottom-16 text-4xl font-black text-green-950/20">1945</div>
+</div>
+<!-- 结束占位 -->
+<div class="w-[40vw]"></div>
+</div>
+</div>
+</section>
+<!-- 详情弹窗 -->
+<div class="fixed inset-0 z-[100] hidden flex items-center justify-center px-4" id="detailModal">
+<div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="hideDetail()"></div>
+<div class="relative w-full max-w-5xl h-[80vh] modal-paper rounded-lg paper-shadow overflow-hidden flex flex-col md:flex-row">
+<!-- 关闭按钮 -->
+<button class="absolute top-4 right-4 z-50 w-10 h-10 flex items-center justify-center border-2 border-red-900 rounded-full hover:bg-red-900 hover:text-white transition-colors" onclick="hideDetail()">
+<iconify-icon class="text-2xl" icon="mingcute:close-line"></iconify-icon>
+</button>
+<!-- 左侧大图 -->
+<div class="w-full md:w-2/5 bg-gray-200 relative">
+<img alt="Event visual" class="w-full h-full object-cover grayscale brightness-75" id="modalImage" src=""/>
+<div class="absolute bottom-0 left-0 p-8 bg-gradient-to-t from-black/80 to-transparent w-full text-white">
+<h4 class="text-4xl font-black italic" id="modalYear">1931</h4>
+<p class="text-sm tracking-[0.2em] opacity-80" id="modalDate"></p>
+</div>
+</div>
+<!-- 右侧详情 -->
+<div class="w-full md:w-3/5 p-8 md:p-12 overflow-y-auto no-scrollbar">
+<h2 class="text-4xl font-black text-red-950 mb-8 border-b-4 border-red-900 inline-block" id="modalTitle"></h2>
+<div class="space-y-10">
+<!-- 1. 详细背景 -->
+<section>
+<div class="flex items-center space-x-2 mb-3">
+<iconify-icon class="text-red-900 text-xl" icon="tabler:list-details"></iconify-icon>
+<h5 class="font-bold text-lg">背景与经过</h5>
+</div>
+<p class="text-slate-700 leading-relaxed text-justify" id="modalDesc"></p>
+</section>
+<!-- 2. 英雄人物 -->
+<section class="bg-red-900/5 p-6 border-l-4 border-red-900">
+<div class="flex items-center space-x-2 mb-3">
+<iconify-icon class="text-red-900 text-xl" icon="ri:shield-star-line"></iconify-icon>
+<h5 class="font-bold text-lg">英雄人物与部队</h5>
+</div>
+<div class="space-y-2 text-slate-800" id="modalHeroes"></div>
+</section>
+<!-- 3. 历史意义 -->
+<section>
+<div class="flex items-center space-x-2 mb-3">
+<iconify-icon class="text-red-900 text-xl" icon="quill:paper"></iconify-icon>
+<h5 class="font-bold text-lg">历史意义与评价</h5>
+</div>
+<p class="italic text-slate-600 border-l-2 border-gray-300 pl-4" id="modalImpact"></p>
+</section>
+</div>
+</div>
+</div>
+</div>
+<!-- 页脚 -->
+<footer class="py-20 px-8 bg-zinc-900 text-[#d4c4a8] text-center overflow-hidden relative">
+<div class="absolute inset-0 opacity-5 pointer-events-none flex items-center justify-center">
+<h2 class="text-[20rem] font-black uppercase">Loyalty</h2>
+</div>
+<div class="max-w-4xl mx-auto relative z-10">
+<h3 class="text-3xl font-black mb-6">不忘初心 铭记历史</h3>
+<p class="mb-12 opacity-70 leading-relaxed">
+                东北抗联精神是中国共产党人精神谱系的重要组成部分。在长达14年的艰苦斗争中，抗联将士展现了坚定的信仰、不畏牺牲的勇气和极度的生存韧性，为世界反法西斯战争的胜利作出了卓越贡献。
+            </p>
+<div class="flex flex-wrap justify-center gap-8 mb-12">
+<div class="flex flex-col items-center">
+<span class="text-4xl font-black text-white mb-2">14</span>
+<span class="text-xs uppercase tracking-widest">坚持抗战年限</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="text-4xl font-black text-white mb-2">4.5W+</span>
+<span class="text-xs uppercase tracking-widest">鼎盛时期兵力</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="text-4xl font-black text-white mb-2">11</span>
+<span class="text-xs uppercase tracking-widest">组建抗联军数</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="text-4xl font-black text-white mb-2">∞</span>
+<span class="text-xs uppercase tracking-widest">抗联精神传承</span>
+</div>
+</div>
+<div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center opacity-50 text-xs">
+<p>© 2026 东北抗战历史数字展陈项目</p>
+<div class="flex space-x-4 mt-4 md:mt-0">
+<a class="hover:text-white transition-colors" href="#">历史研究</a>
+<a class="hover:text-white transition-colors" href="#">纪念场馆</a>
+<a class="hover:text-white transition-colors" href="#">文献档案</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        const eventsData = [
+            {
+                year: "1931",
+                date: "1931年09月18日",
+                title: "九一八事变",
+                image: "https://kimi-web-img.moonshot.cn/img/dangshi.people.com.cn/aeb325d06f73b43e9a571a31a9ed806ad005bd53.jpg",
+                desc: "1931年9月18日晚，日本关东军自行炸毁沈阳北郊柳条湖附近南满铁路的一段路轨，反诬中国军队所为，遂炮轰北大营。由于国民党政府执行“不抵抗政策”，沈阳当夜沦陷，随后日军迅速占领东北全境。这是日本帝国主义侵华的开端，也标志着中国局部抗战的开始。",
+                heroes: "<strong>主要力量：</strong>东北军北大营爱国官兵、中共满洲省委地下组织。<br><strong>事迹：</strong>北大营士兵在不抵抗命令下仍自发进行局部抵抗。",
+                impact: "九一八事变打破了远东国际格局。此后，中国东北3000万同胞陷入14年的亡国奴境地，但也激发了全国范围内的抗日救亡运动热潮。"
+            },
+            {
+                year: "1931",
+                date: "1931年11月",
+                title: "江桥抗战",
+                image: "https://kimi-web-img.moonshot.cn/img/www.news.cn/d706e80b0b827f46e4e1620f77396a958e3b3070.JPG",
+                desc: "日军为控制黑龙江省，向齐齐哈尔进攻。时任黑龙江省代主席马占山将军率领官兵在嫩江铁桥（江桥）附近顽强抵抗。马占山将军发出了‘与阵地共存亡’的誓言，激战15个昼夜。虽最终因孤立无援撤离，但其英勇事迹传遍全国。",
+                heroes: "<strong>核心将领：</strong>马占山将军。<br><strong>英勇部队：</strong>黑龙江省防军。<br><strong>事迹：</strong>抗击了优势装备的日军，是‘九一八’后中国军队第一次大规模有组织的武装抵抗。",
+                impact: "江桥抗战打破了‘日军不可战胜’的神话，极大地鼓舞了全国人民的抗战信心，引发了全国性的捐款和慰问热潮。"
+            },
+            {
+                year: "1936",
+                date: "1936年02月",
+                title: "东北抗日联军成立",
+                image: "https://kimi-web-img.moonshot.cn/img/p3.img.cctvpic.com/f33c573d88f1a7ca9b58f3f6af01df680bfc9705.png",
+                desc: "在中共满洲省委的领导下，将散布在东北各地的游击队、自卫军等抗日武装进行统一整编，发表《东北抗日联军统一军队建制宣言》。随后陆续组建了十一个军，并在吉东、北满、南满等地建立了巩固的抗日游击根据地，开始了有组织的长久抗争。",
+                heroes: "<strong>主要领导：</strong>杨靖宇、赵尚志、周保中、李兆麟。<br><strong>部队：</strong>东北抗日联军第1至第11军。<br><strong>事迹：</strong>在极端寒冷、缺粮断弹的情况下，开展了长达数千里的游击战争。",
+                impact: "东北抗联是抗日战争中出现最早、坚持时间最长、条件最艰苦的一支劲旅，有力地牵制了数十万日军精锐关东军。"
+            },
+            {
+                year: "1938",
+                date: "1938年秋",
+                title: "八女投江",
+                image: "https://kimi-web-img.moonshot.cn/img/www.news.cn/e4319645e85b6f8a1af83eba4a531f188bf1b8eb.jpg",
+                desc: "1938年10月，抗联第2路军第5军妇女团指导员冷云，率领7名女战士随部西征。在牡丹江支流乌斯浑河边掩护主力部队转移时，她们被日伪军包围。在弹尽粮绝、退路被截断的情况下，她们挽臂跳入波涛汹涌的乌斯浑河，壮烈牺牲。",
+                heroes: "<strong>八位英雄：</strong>冷云、安顺福、胡秀芝、李凤善、黄桂清、郭桂琴、王惠民、杨贵珍。<br><strong>事迹：</strong>年龄最大的23岁，最小的年仅13岁，展现了中国妇女巾帼不让须眉的气概。",
+                impact: "她们的英雄事迹被编入教材和文学作品，成为了东北抗战英雄主义精神的永恒象征。"
+            },
+            {
+                year: "1940",
+                date: "1940年02月23日",
+                title: "杨靖宇将军牺牲",
+                image: "https://kimi-web-img.moonshot.cn/img/www.cngongji.cn/e46cc91f940ce5af0de7e6544aa6ce48deb5c8f1.jpg",
+                desc: "1939年冬季，日军发动大规模“大讨伐”。由于叛徒出卖，抗联第一路军总司令杨靖宇在濛江县三道崴子被日伪军包围。他只身与敌周旋5昼夜，右手负伤就换左手射击，直到英勇牺牲。日军残忍地剖开他的胃，发现里面竟然只有未消化的枯草、树皮和棉絮。",
+                heroes: "<strong>灵魂人物：</strong>杨靖宇（抗联第一路军总司令）。<br><strong>事迹：</strong>战斗至最后一息。日军指挥官岸谷隆一郎感叹：‘虽为敌人，睹其壮烈亦为之感叹。’",
+                impact: "杨靖宇将军的一生体现了‘头颅可断腹可剖，烈士忠魂不复还’的绝顶气节，他的名字成为了民族魂的代名词。"
+            },
+            {
+                year: "1945",
+                date: "1945年08月",
+                title: "抗战胜利 东北光复",
+                image: "https://kimi-web-img.moonshot.cn/img/www.ccdijl.gov.cn/741a0b4ec0d81df9c9b098d2a60c240654538fcb.jpg",
+                desc: "1945年8月8日，苏联对日宣战，150万红军出兵东北。此前已撤入苏联境内整训的东北抗联教导旅（苏联红军第88独立步兵旅）配合苏军行动，空降或先遣潜入东北执行向导、侦察及夺取关键据点的任务。8月15日日本投降，东北正式光复。",
+                heroes: "<strong>关键将领：</strong>周保中、李兆麟、冯仲云。<br><strong>部队：</strong>东北抗联教导旅（88旅）。<br><strong>事迹：</strong>指引苏军摧毁日军永久要塞，先期进入东北各大城市建立苏军驻军司令部协助接管。",
+                impact: "东北抗联坚持14年，终于等来了胜利的曙光。此举不仅光复了故土，也为后来中国共产党在东北建立稳固的根据地奠定了基础。"
+            }
+        ];
+
+        const container = document.getElementById('timelineContainer');
+        const modal = document.getElementById('detailModal');
+
+        // 水平滚动处理
+        container.addEventListener('wheel', (evt) => {
+            evt.preventDefault();
+            container.scrollLeft += evt.deltaY;
+        });
+
+        function showDetail(index) {
+            const data = eventsData[index];
+            document.getElementById('modalYear').innerText = data.year;
+            document.getElementById('modalDate').innerText = data.date;
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('modalDesc').innerText = data.desc;
+            document.getElementById('modalHeroes').innerHTML = data.heroes;
+            document.getElementById('modalImpact').innerText = data.impact;
+            document.getElementById('modalImage').src = data.image;
+            
+            modal.classList.remove('hidden');
+            modal.querySelector('.modal-paper').classList.add('fade-in');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideDetail() {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 快捷关闭
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') hideDetail();
+        });
+    </script>
+</body>
+</html>
